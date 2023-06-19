@@ -14,7 +14,7 @@ import FormGroup from '@material-ui/core';
 import InterfaceRepository,{ InterfaceRepo } from './libs/interfaceRepository';
 import { ethers } from 'ethers';
 import { FunctionFragment } from 'ethers/lib/utils';
-
+import YahoABI from './contract/abi/Yaho.json'
 
 const Container = styled.div`
   padding: 24px;
@@ -104,10 +104,12 @@ useEffect(()=>{
   if(option.name == selectedFunction){
     setFunctionIndex(index)
   }
- 
+ setParam('')
+
 })
 console.log("Selected function",selectedFunction)
 },[selectedFunction])
+
   const handleClick = ( ) =>{
     console.log("ABI: ",abi)
     console.log("type ",typeof(abi))
@@ -118,15 +120,38 @@ console.log("Selected function",selectedFunction)
 
   }
 
-  const createTxClick = () =>{
-
+  const createTxClick = async () =>{
+    console.log("Param split",param?.split(","))
+    const params: string[]|undefined = param?.split(",")
+    // const arr = Object.values(params)
     const iface = new ethers.utils.Interface(abi)
-    const to = contractAddr;
+    const toAddr = contractAddr;
     const func = selectedFunction;
-    // const param = 
-    //SDK.txs.send({})
+    console.log(typeof(params))
+    let calldata 
+    if(params?.length==1 && params[0] == '' ){
+      console.log('null')
+      
+       calldata = await iface.encodeFunctionData(func,[])
+    }
+    else 
+    {
+       calldata = await iface.encodeFunctionData(func,params)
+    }
+
+    console.log("calldata: ",calldata)
+    // // const param = 
+    const safeTxHash = await SDK.txs.send({txs:[{
+      to:toAddr,
+      value: '0',
+      data: calldata
+    }]})
+    
+    
+
 
     console.log("Create tx")
+    console.log("Tx hash: ",safeTxHash)
   }
   if (!safeInfo) {
     return <Spinner size={24} />;
@@ -153,14 +178,16 @@ console.log("Selected function",selectedFunction)
                 <TextField fullWidth  variant="outlined" label="Hashi Module" value={hashiModuleAddr} onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
     setHashiModuleAddr(event.target.value);
           }}/>
-
-<TextField fullWidth  variant="outlined" label="Enter Cross Chain Cibtract Address" value={contractAddr} onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+<TextField fullWidth  variant="outlined" label="Cross Chain Safe" value={crossChainSafe} onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+    setCrossChainSafe(event.target.value);
+          }}/>
+<TextField fullWidth  variant="outlined" label="Enter Cross Chain Contract Address" value={contractAddr} onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
     setcontractAddr(event.target.value);
           }}/>
 
           <TextField fullWidth  variant="outlined" label="Enter ABI" value={abi} onChange={e=>setAbi(e.target.value)}
           />
-          <Button variant="contained" onClick={handleClick}>Filter ABI</Button>
+          {abi&&<Button variant="contained" onClick={handleClick}>Filter ABI</Button>}
           {contract && (
             <TextField  fullWidth select  variant="outlined" label="Select Function">
               {contract?.methods.map((option)=>(
@@ -173,7 +200,7 @@ console.log("Selected function",selectedFunction)
               ))}
             </TextField>
           )}
-          {selectedFunction && (
+          {/* {selectedFunction && (
             // contract?.methods.map((option)=>{
             //   (option.name == selectedFunction) ? ((option.inputs.length>1) ? 
             //     (option.inputs.map((e,index)=>{
@@ -194,14 +221,20 @@ console.log("Selected function",selectedFunction)
          
             // console.log("Contract:",contract!.methods[functionIndex])
             contract?.methods[functionIndex].inputs.map((e,index)=>{
-              return <TextField fullWidth  variant="outlined" key={index} label={e.name}></TextField> 
+              return <TextField fullWidth  variant="outlined" name={e.name} key={index} label={e.name} onChange={(e)=>{
+                setParam({
+                  e.name :
+                })
+              }}}></TextField> 
             })
-          )}
+          )} */}
+
+          {(selectedFunction&&param!='')&&(<TextField fullWidth  variant="outlined" label="Parameter"  onChange={(e)=>{setParam(e.target.value)}}></TextField>)}
 
 <Button variant="contained" onClick={createTxClick}>Create Transaction</Button>
 <div>
-  <p>Select: {selectedFunction}</p>
-  <p>Param: {param}</p>
+  {/* <p>Select: {selectedFunction}</p> */}
+  {/* <p>Param: {param}</p> */}
 </div>
 {/* 
           <AddressInput
