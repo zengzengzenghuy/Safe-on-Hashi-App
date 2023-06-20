@@ -1,21 +1,23 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo,createContext } from 'react';
 import styled from 'styled-components';
 import { Spinner, Heading, SegmentedControl } from 'evergreen-ui';
 import SafeAppsSDK, { SafeInfo } from '@gnosis.pm/safe-apps-sdk';
 import { AppTabs } from './types';
 import Main from './tabs/Main';
 import RpcCalls from './tabs/RpcCalls';
-import { Modal, MenuItem, TextField ,Menu, Select, FormControl, InputLabel, Box,Typography}  from '@material-ui/core';
+import { Modal, MenuItem, TextField ,Menu, Select, FormControlLabel, InputLabel, Box,Typography,Switch}  from '@material-ui/core';
 import { Button, SelectChangeEvent } from '@mui/material';
-import { AddressInput, Divider, Switch, Text, Title } from '@gnosis.pm/safe-react-components'
+import { AddressInput, Divider, Text, Title } from '@gnosis.pm/safe-react-components'
 import { ContractInterface,ContractMethod } from './typing/models';
 import FormGroup from '@material-ui/core';
 import InterfaceRepository,{ InterfaceRepo } from './libs/interfaceRepository';
 import { ethers } from 'ethers';
 import { FunctionFragment } from 'ethers/lib/utils';
 import YahoABI from './contract/abi/Yaho.json'
+import YaruABI from './contract/abi/Yaru.json'
 import HashiABI from './contract/abi/HashiModule.json'
 import deployedContract from "./utils/contract.json"
+
 
 const Container = styled.div`
   padding: 24px;
@@ -38,6 +40,7 @@ const tabs = [
 ];
 
 const SDK = new SafeAppsSDK();
+const ModeContext = createContext<boolean>(true)
 
 const App = (): React.ReactElement => {
 
@@ -59,6 +62,10 @@ const App = (): React.ReactElement => {
   const [functionIndex,setFunctionIndex] = useState<any>()
   const [bridge,setBridge] = useState<string>('')
   const [isDetailOpen,setIsDetailOpen]  = useState<boolean>(false)
+  const [message, setMessage] = useState<string>('')
+  const [messageId, setMessageId] = useState<string>('')
+  const [initMode,setInitMode] = useState<boolean>(false)
+
   useEffect(() => {
     async function loadSafeInfo() {
       const safuInfo = await SDK.safe.getInfo()
@@ -155,6 +162,21 @@ useEffect(()=>{
         console.log("Tx hash: ",safeTxHash)
 
   }
+
+  const claimTxClick = async () =>{
+    const Yaru = new ethers.utils.Interface(YaruABI);
+    
+    const safeTxData = Yaru.encodeFunctionData("executeMessages",[[message],[messageId],[crossChainSafe],[deployedContract.GCAMBAdapter]])
+    console.log("Claim transaction")
+
+    const safeTxHash = await SDK.txs.send({txs:[{
+      to:deployedContract.Yaru,
+      value: '0',
+      data: safeTxData
+    }]})
+        console.log("Tx hash: ",safeTxHash)
+
+  }
   const Boxstyle = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -176,15 +198,14 @@ useEffect(()=>{
       <Heading size={700} marginTop="default">
         Safe on Hashi Demo
       </Heading>
-      {/* <SegmentedControl
-        value={currentTab}
-        onChange={(val) => setCurrentTab(val as AppTabs)}
-        options={tabs}
-      /> */}
-{/*  
-      <FormControlLabel control={<Switch defaultChecked/>} label="Cross Chain Tx"/>
-       */}
-  
+
+       <Box>
+            <FormControlLabel  label="Init mode" control={<Switch checked={initMode} onChange= {(event:React.ChangeEvent<HTMLInputElement>) =>{
+        setInitMode(event.target.checked)}}/>}/>
+        </Box>
+    
+    {initMode && 
+    <>
             <>
               <InputLabel>Bridge to Chain</InputLabel>
               <Select variant="outlined" label="Select Chain" value={chain} onChange={(event:React.ChangeEvent<{value:unknown}>)=>{setChain(event.target.value as string); (event.target.value=="Gnosis Chain"?setcrossChainId('100'):setcrossChainId('1'))}}>
@@ -193,9 +214,9 @@ useEffect(()=>{
               </Select>
 
             </>
-            {/* <TextField fullWidth select variant="outlined" label="Select 'Bridge solution" value={bridge}> */}
-         <>
-         <InputLabel>Select Bridge Solution</InputLabel>
+          
+          <>
+            <InputLabel>Select Bridge Solution</InputLabel>
               <Select variant="outlined" label="Select Bridge" value={bridge} onChange={(event:React.ChangeEvent<{value:unknown}>)=>{setBridge(event.target.value as string)}}>
                 <MenuItem value="AMB">AMB</MenuItem>
                 <MenuItem disabled={true} value="Telepathy">Telepathy</MenuItem>
@@ -205,9 +226,9 @@ useEffect(()=>{
                 <MenuItem disabled={true} value="Wormhole">Wormhole</MenuItem>
                 <MenuItem disabled={true} value="Axiom">Axiom</MenuItem>
               </Select>
-    </>
+          </>
            
-            {/* </TextField> */}
+      
                 <TextField fullWidth  variant="outlined" label="Hashi Module" value={hashiModuleAddr} onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
     setHashiModuleAddr(event.target.value);
           }}/>
@@ -232,34 +253,6 @@ useEffect(()=>{
               ))}
             </TextField>
           )}
-          {/* {selectedFunction && (
-            // contract?.methods.map((option)=>{
-            //   (option.name == selectedFunction) ? ((option.inputs.length>1) ? 
-            //     (option.inputs.map((e,index)=>{
-            //       (<TextField fullWidth  variant="outlined" key={index} label={e.name}></TextField> )
-            //     })):
-            //   (<TextField fullWidth  variant="outlined" key='0' label={option.inputs[0].name}></TextField> ))
-            //   :
-            //   setParam('null')
-            // })
-            // contract?.methods.map((option,index)=>{
-            //   if(option.name == selectedFunction){
-            //       setFunctionIndex(index)
-            //   }
-            // })
-            // contract?.methods[functionIndex].inputs.map((e,index)=>{
-              
-            // })
-         
-            // console.log("Contract:",contract!.methods[functionIndex])
-            contract?.methods[functionIndex].inputs.map((e,index)=>{
-              return <TextField fullWidth  variant="outlined" name={e.name} key={index} label={e.name} onChange={(e)=>{
-                setParam({
-                  e.name :
-                })
-              }}}></TextField> 
-            })
-          )} */}
 
           {(selectedFunction&&isInput)&&(<TextField fullWidth variant="outlined" label="Parameter"  onChange={(e)=>{setParam(e.target.value)}}></TextField>)}
 
@@ -278,56 +271,41 @@ useEffect(()=>{
           </Box>
 
         </Modal>
-<div>
-  {/* <p>Select: {selectedFunction}</p> */}
-  {/* <p>Param: {param}</p> */}
-</div>
-{/* 
-          <AddressInput
-            id="hashiModuleAddress"
-            name="hashiModuleAddress"
-            label="Enter Hashi Module"
-            hiddenLabel={false}
-            address={hashiModuleAddr}
-            fullWidth
-            showNetworkPrefix={!!networkPrefix}
-            networkPrefix={networkPrefix}
-            showErrorsInTheLabel={false}
-            onChangeAddress={(address:string) => {
-              setHashiModuleAddr(address)}}
-            InputProps={{
-              endAdornment: isValidAddress(hashiModuleAddr) && (
-                <InputAdornment position="end">
-                  <CheckIconAddressAdornment />
-                </InputAdornment>
-              ),
-            }}
-          />
-
-        <AddressInput
-            id="crossChainSafe"
-            name="crossChainSafe"
-            label="Enter Safe address on the destination chain"
-            hiddenLabel={false}
-            address={crossChainSafe}
-            fullWidth
-            showNetworkPrefix={!!networkPrefix}
-            networkPrefix={networkPrefix}
-            showErrorsInTheLabel={false}
-            onChangeAddress={(address:string) => {
-              setCrossChainSafe(address)}}
-            InputProps={{
-              endAdornment: isValidAddress(crossChainSafe) && (
-                <InputAdornment position="end">
-                  <CheckIconAddressAdornment />
-                </InputAdornment>
-              ),
-            }}
-          /> */}
 
 
-      {/* {currentTab === '0' && <Main sdk={SDK} safeInfo={safeInfo} />} */}
-      {/* {currentTab === '1' && <RpcCalls sdk={SDK} />} */}
+  </>
+    
+}
+    {!initMode && 
+    <>
+      <Typography>Claim mode</Typography>
+
+   
+   
+
+      <TextField fullWidth  variant="outlined" label="Cross Chain Safe" value={crossChainSafe} onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+    setCrossChainSafe(event.target.value);
+          }}/>
+   <InputLabel>Select Bridge Solution</InputLabel>
+        <Select variant="outlined" label="Select Bridge" value={bridge} onChange={(event:React.ChangeEvent<{value:unknown}>)=>{setBridge(event.target.value as string)}}>
+          <MenuItem value="AMB">AMB</MenuItem>
+          <MenuItem disabled={true} value="Telepathy">Telepathy</MenuItem>
+          <MenuItem disabled={true} value="Connext">Connext</MenuItem>
+          <MenuItem disabled={true} value="DendrETH">DendrETH</MenuItem>
+          <MenuItem disabled={true} value="Sygma">Sygma</MenuItem>
+          <MenuItem disabled={true} value="Wormhole">Wormhole</MenuItem>
+          <MenuItem disabled={true} value="Axiom">Axiom</MenuItem>
+        </Select>
+
+
+        <TextField fullWidth  variant="outlined" label="Message ID" value={messageId} onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+    setMessageId(event.target.value);
+          }}/>
+
+<Button variant="contained" onClick={claimTxClick}>Claim Transaction</Button>
+    </>
+     }
+
     </Container>
   );
 };
