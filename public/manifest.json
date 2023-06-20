@@ -1,7 +1,7 @@
 {
-  "short_name": "Safe Test App",
-  "name": "Safe Test App",
-  "description": "Describe your Safe App here",
+  "short_name": "Safe On Hashi App",
+  "name": "Safe On Hashi App",
+  "description": "Safe On Hashi App",
   "iconPath": "logo.svg",
   "safe_apps_permissions": ["camera", "microphone"],
   "icons": [
