@@ -12,8 +12,12 @@ Then:
 - Go to [Safe app](https://safe.global/)
 - Go to Apps -> Manage Apps -> Add Custom App
 - Paste your localhost URL, default is http://localhost:3000/
-- You should see Safe Test App as a new app
+- You should see Safe on Hashi App as a new app
 
+## Using the App
+
+[How to initiate from source chain Safe](/doc/README.md#initiate-transactation-on-source-chain)  
+[How to claim from destination chain Safe](/doc/README.md#claim-transaction-on-destination-chain)
 
 ## Credits
 
