@@ -1,4 +1,4 @@
-# Safe on Hashi -UI
+# Safe on Hashi App
 
 ## Running the app
 
