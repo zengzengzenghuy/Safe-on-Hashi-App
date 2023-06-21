@@ -9,7 +9,7 @@ Refer to [README.md](../README.md) on guide to setup app.
 
 ### Step 1: Select Mode
 
-Connect your Safe to the source chain.  
+**Connect your Safe to the source chain.**  
 Turn on 'Init Mode' switch to initiate transaction.
 
 Input the data accordingly:
@@ -34,9 +34,11 @@ Input the data accordingly:
 
 ### Step 3: Confirm Transaction
 
+Click To Copy Message: Click the button and save the message somewhere, it will be used for claiming transaction.
+
 Check the transaction details and Click 'Confirm Transaction'
 
-![](../public/doc/Step3-confirmtransaction.png)
+![](../public/doc/Step3-confirmTx.png)
 
 ### Step 4: Submit Safe Transaction
 
@@ -46,11 +48,13 @@ Once click 'submit', the transaction will be sent to Safe queue. Proceed the ope
 
 ![](../public/doc/Step4-Safetransaction.png)
 
-### Step 5: Get messageId
+### Step 5: Open block explorer
 
 Once the transaction is executed on source chain, select the transaction hash. It will lead to source chain explorer, i.e. Etherscan.
 
 ![](../public/doc/Step5-successInitTx.png)
+
+### Step 6: Get messageId
 
 On the transaction page, click 'Logs', and find the event called "MessageDispatched".
 
@@ -60,4 +64,23 @@ Save the **messageId** data for claiming the transaction on destination chain.
 
 ## Claim transaction on Destination Chain
 
-TODO
+After waiting for transaction bridging to destination chain\*\*, you may proceed to claim the message on destination chain.
+
+** Different bridge solution requires different time to pass message, please check the bridge solution for more information.  
+At the time this is written, **AMB** requires 20 blocks confirmation, **Telepathy\*\* requires Ethereum consensus finalization ~= 15mins.
+
+### Step 7: Input claim transaction parameters
+
+**Switch to destination chain and connect to destination chain Safe.**  
+In order to create 'Claim Transaction', you need following data:
+
+1. Cross Chain Safe: Safe address from source chain, it is the Safe address that you connected to create transaction on Init Mode. (Hex)
+2. Bridge Solution: Bridge solution you chose to init transaction. (Select)
+3. Message: Message data that you copied from step 3. (String)
+4. MessageId: Message ID from Step 5 (Hex)
+
+![](../public/doc/Step7-claimMessageParam.png)
+
+### Step 8: Claim Transaction
+
+Once 'Claim Transaction' is clicked, you will create a normal Safe transaction. Sign it, once the threshold is reached, the claim transaction will be executed by Hashi Module.
