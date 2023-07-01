@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo,createContext } from 'react';
+import React, { useState, useEffect} from 'react';
 import styled from 'styled-components';
 import { Spinner, Heading, SegmentedControl } from 'evergreen-ui';
 import SafeAppsSDK, { SafeInfo } from '@gnosis.pm/safe-apps-sdk';
@@ -7,6 +7,8 @@ import Main from './tabs/Main';
 import RpcCalls from './tabs/RpcCalls';
 import { Modal, MenuItem, TextField ,Menu, Select, FormControlLabel, InputLabel, Box,Typography,Switch}  from '@material-ui/core';
 import { Button, SelectChangeEvent } from '@mui/material';
+import HelpIcon from '@mui/icons-material/Help';
+import Tooltip from '@mui/material/Tooltip';
 import { AddressInput, Divider, Text, Title } from '@gnosis.pm/safe-react-components'
 import { ContractInterface,ContractMethod } from './typing/models';
 import FormGroup from '@material-ui/core';
@@ -41,7 +43,6 @@ const tabs = [
 ];
 
 const SDK = new SafeAppsSDK();
-const ModeContext = createContext<boolean>(true)
 
 const App = (): React.ReactElement => {
 
@@ -251,16 +252,18 @@ useEffect(()=>{
     
       {initMode && 
         <>
-          <>
+          <div style={{display:"flex"}}>
             <InputLabel>Bridge to Chain</InputLabel>
             <Select variant="outlined" label="Select Chain" value={chain} onChange={(event:React.ChangeEvent<{value:unknown}>)=>{setChain(event.target.value as string); (event.target.value=="Gnosis Chain"?setcrossChainId('100'):setcrossChainId('1'))}}>
             <MenuItem value="Ethereum">Ethereum</MenuItem>
             <MenuItem value="Gnosis Chain">Gnosis Chain</MenuItem>
             </Select>
-
-          </>
+          <Tooltip title="Chain to call to">
+            <HelpIcon/>
+          </Tooltip>
+          </div>
               
-          <>
+          <div style={{display:"flex"}}>
             <InputLabel>Select Bridge Solution</InputLabel>
               <Select variant="outlined" label="Select Bridge" value={bridge} onChange={(event:React.ChangeEvent<{value:unknown}>)=>{setBridge(event.target.value as string)}}>
                 <MenuItem value="AMB">AMB</MenuItem>
@@ -271,21 +274,50 @@ useEffect(()=>{
                 <MenuItem disabled={true} value="Wormhole">Wormhole</MenuItem>
                 <MenuItem disabled={true} value="Axiom">Axiom</MenuItem>
               </Select>
-          </>
+          <Tooltip title="Bridge solution to relay the message">
+            <HelpIcon/>
+          </Tooltip>
+          </div>
               
-          
+          <div style={{display:"flex"}}>
           <TextField fullWidth  variant="outlined" label="Hashi Module" value={hashiModuleAddr} onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             setHashiModuleAddr(event.target.value);}}
           />
+          <Tooltip title="Hashi Module of Safe on destination chain">
+            <HelpIcon/>
+          </Tooltip>
+          </div>
+          <div style={{display:"flex"}}>
           <TextField fullWidth  variant="outlined" label="Cross Chain Safe" value={crossChainSafe} onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             setCrossChainSafe(event.target.value);}}
           />
+          <Tooltip title="Safe address on destination chain">
+            <HelpIcon/>
+          </Tooltip>
+          </div>
+          <div style={{display:"flex"}}>
           <TextField fullWidth  variant="outlined" label="Enter Cross Chain Contract Address" value={contractAddr} onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             setcontractAddr(event.target.value);}}
           />
-
+          <Tooltip title="Contract address to call on destination chain">
+            <HelpIcon/>
+          </Tooltip>
+          </div>
+          <div style={{display:"flex"}}>
           <TextField fullWidth  variant="outlined" label="Enter ABI" value={abi} onChange={e=>setAbi(e.target.value)}/>
-              
+           <Tooltip title={
+            <>
+            <Typography>Format</Typography>
+            <p>&#91;&#123;"type": "function",
+            "inputs": [&#123; "name":"a","type":"uint256"&#125;],
+            "name":"foo",
+            "outputs": []&#125; &#93;</p>
+            </>
+           }>
+           <HelpIcon/>   
+           </Tooltip>
+           
+           </div>
           {abi&&<Button variant="contained" onClick={handleClick}>Filter ABI</Button>}
           {contract && (
             <TextField  fullWidth select  variant="outlined" label="Select Function">
