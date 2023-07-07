@@ -1,9 +1,6 @@
-import SafeAppsSDK from "@gnosis.pm/safe-apps-sdk"
+import SafeAppsSDK from "@gnosis.pm/safe-apps-sdk";
 import { ethers } from "ethers";
 
-const handleTransaction = async (sdk: SafeAppsSDK) =>{
-
-
-}
+const handleTransaction = async (sdk: SafeAppsSDK) => {};
 
 export default handleTransaction;

@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components"
+import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
     html {
@@ -20,6 +20,6 @@ const GlobalStyle = createGlobalStyle`
     .MuiInputBase-root {
         width: 100% !important;
     }
-`
+`;
 
-export default GlobalStyle
+export default GlobalStyle;
