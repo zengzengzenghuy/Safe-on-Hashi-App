@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Typography } from "@material-ui/core";
-import { Box, Button, SelectChangeEvent } from "@mui/material";
+import { Box, Button, SelectChangeEvent, List } from "@mui/material";
 import { ethers } from "ethers";
 import { EthersAdapter } from "@safe-global/protocol-kit";
 import SafeAppsSDK, { SafeInfo } from "@gnosis.pm/safe-apps-sdk";
@@ -10,7 +10,7 @@ import {
   SafeTransactionData,
 } from "@safe-global/safe-core-sdk-types";
 import SafeApiKit from "@safe-global/api-kit";
-import getTxServiceURL from "./utils/helper";
+import {getTxServiceURL} from "./utils/helper";
 import TxCard from "./component/TxCard";
 
 const SDK = new SafeAppsSDK();
@@ -63,13 +63,19 @@ const History = () => {
 
   return (
     <>
-      <Button onClick={handleClick}>Fetch</Button>
-
-      {txList &&
+  <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
+    <List>
+    {txList &&
         txList?.results?.length > 0 &&
         txList?.results.map((tx: SafeMultisigTransactionResponse) => {
-          return <p>{tx.to}</p>;
+          if (tx.to === "0x9ec14c28fdcB2B325b7505E749A5C4618da70D95") {
+            return <TxCard txs={tx} chainId={safeInfo?.chainId} />;
+          }
         })}
+    </List>
+
+  </Box>
+ 
     </>
   );
 };

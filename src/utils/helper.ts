@@ -14,4 +14,21 @@ const getTxServiceURL = (chainId: string) => {
   }
 };
 
-export default getTxServiceURL;
+const getExplorerURL = (chainId: number|undefined) =>{
+    switch (chainId) {
+        case 5:
+          return "https://goerli.etherscan.io/tx/";
+          break;
+        case 1:
+          return "https://etherscan.io/tx/";
+          break;
+        case 100:
+          return "https://gnosisscan.io/tx/";
+          break;
+        default:
+          return "https://goerli.etherscan.io/tx/";
+      }
+}
+
+export  {getTxServiceURL,getExplorerURL};
+
