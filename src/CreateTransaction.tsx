@@ -96,16 +96,6 @@ const CreateTransaction = (): React.ReactElement => {
 
   useEffect(() => {}, [bridge]);
 
-  const [binaryData, setBinaryData] = useState<ArrayBuffer>();
-  const fetchData = async () => {
-    try {
-      const response = await fetch("/src/contract/HashiModuleBytecode.bin");
-      const data = await response.arrayBuffer();
-      setBinaryData(data);
-    } catch (error) {
-      console.error("Error fetching binary file:", error);
-    }
-  };
 
   const handleClick = () => {
     if (abi === undefined) {

@@ -48,9 +48,10 @@ const TxCard = (props: {
     const initiatedDate = new Date(props.txs.executionDate);
     // For AMB, need to wait for 20 block confirmation
     // For testing purpose, this status does not actually reflect the real status
-    if (now.getTime() - initiatedDate.getTime() < 20 * 12) {
+
+    if (now.getTime() - initiatedDate.getTime() < 20000 * 12) {
       setStatus("Initiated");
-    } else if (now.getTime() - initiatedDate.getTime() < 50 * 12) {
+    } else if (now.getTime() - initiatedDate.getTime() < 50000 * 12) {
       setStatus("Bridged");
     } else {
       setStatus("Claimed");
@@ -69,8 +70,8 @@ const TxCard = (props: {
           primary={
             "Tx: " +
             props.txs.transactionHash +
-            " Created on:  " +
-            props.txs.executionDate
+            "            Status:  " +
+            status
           }
         />
         <Modal
@@ -85,7 +86,8 @@ const TxCard = (props: {
               align="left"
               style={{ wordWrap: "break-word" }}
               sx={{ mt: 3 }}
-            ><h3>Transaction Information</h3>
+            >
+              <h3>Transaction Information</h3>
               SafeTxHash:{" "}
               <a
                 href={explorerURLPrefix + props.txs.transactionHash}
@@ -110,7 +112,9 @@ const TxCard = (props: {
               Block Number: {props.txs.blockNumber}
               <br />
               <h3>Status</h3>
-              {status}<br/><br/>
+              {status}
+              <br />
+              <br />
               Press Esc to Exit
             </Typography>
           </Box>

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -8,8 +9,12 @@ import Typography from "@mui/material/Typography";
 import CreateTransaction from "./CreateTransaction";
 import { Create } from "@mui/icons-material";
 import ClaimTransaction from "./ClaimTransaction";
-
+import { ethers } from "ethers";
+import HashiModuleABI from "./contract/abi/HashiModule.json";
+import { Dialog } from "@mui/material";
+import Prerequisite from "./Prerequisite";
 const steps = ["Prerequisite", "Create Transaction", "Claim Transaction"];
+
 
 export default function CreateTx() {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -25,6 +30,29 @@ export default function CreateTx() {
   const handleReset = () => {
     setActiveStep(0);
   };
+
+  const [binaryData, setBinaryData] = useState<ArrayBuffer>();
+  const [isHashiModuleOpen, setIsHashiModuleOpen] = useState<boolean>(false);
+  const fetchData = async () => {
+    try {
+      const response = await fetch("/src/contract/HashiModuleBytecode.bin");
+      const data = await response.arrayBuffer();
+      setBinaryData(data);
+      console.log(data);
+    } catch (error) {
+      console.error("Error fetching binary file:", error);
+    }
+  };
+  const handleDeployHashiModule = async () => {
+    setIsHashiModuleOpen(true);
+    fetchData()
+    const bytecode = new Uint8Array(binaryData!)
+    const hashiModuleFactory = new ethers.ContractFactory(HashiModuleABI,bytecode)
+    console.log(hashiModuleFactory)
+    hashiModuleFactory.deploy([])
+  };
+
+ 
 
   return (
     <Box sx={{ width: "50%", "margin-left": "70px", "margin-top": "20px" }}>
@@ -56,19 +84,7 @@ export default function CreateTx() {
         <React.Fragment>
           <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
           {activeStep === 0 && (
-            <>
-              <h2>Prerequisite</h2>
-              <h3>1. Deploy Safe on Destination Chain</h3>
-              <p>Switch to Destination Chain and Create new account</p>
-              <Button variant="outlined" href="https://app.safe.global/welcome">
-                Click to deploy
-              </Button>
-              <h3>2. Deploy Hashi Module for Safe on Destination Chain</h3>
-              <p>
-                Deploy and Enable Hashi Module for Safe on Destination Chain
-              </p>
-              <Button variant="outlined">Click to deploy</Button>
-            </>
+            <Prerequisite/>
           )}
 
           {activeStep === 1 && <CreateTransaction />}
