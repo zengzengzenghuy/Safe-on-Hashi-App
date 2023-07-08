@@ -4,7 +4,6 @@ import { Spinner, Heading, SegmentedControl } from "evergreen-ui";
 import SafeAppsSDK, { SafeInfo } from "@gnosis.pm/safe-apps-sdk";
 
 import {
-  Modal,
   MenuItem,
   TextField,
   Menu,
@@ -15,7 +14,14 @@ import {
   Typography,
   Switch,
 } from "@material-ui/core";
-import { Button, SelectChangeEvent } from "@mui/material";
+import {
+  Button,
+  SelectChangeEvent,
+  Modal,
+  Alert,
+  AlertTitle,
+  Dialog,
+} from "@mui/material";
 import HelpIcon from "@mui/icons-material/Help";
 import Tooltip from "@mui/material/Tooltip";
 import {
@@ -54,7 +60,8 @@ const ClaimTransaction = (): React.ReactElement => {
 
   const [claimMessage, setClaimMessage] = useState<string>("");
   const [messageId, setMessageId] = useState<any>();
-  const [initMode, setInitMode] = useState<boolean>(true);
+
+  const [emptyFieldCheck, setEmptyFieldCheck] = useState<boolean>(false);
 
   useEffect(() => {
     async function loadSafeInfo() {
@@ -68,6 +75,15 @@ const ClaimTransaction = (): React.ReactElement => {
   }, []);
 
   const claimTxClick = async () => {
+    if (
+      sourceSafe == "" ||
+      bridge == "" ||
+      messageId == "" ||
+      claimMessage == ""
+    ) {
+      setEmptyFieldCheck(true);
+      return;
+    }
     const Yaru = new ethers.utils.Interface(YaruABI);
 
     const safeTxData = Yaru.encodeFunctionData("executeMessages", [
@@ -122,7 +138,6 @@ const ClaimTransaction = (): React.ReactElement => {
         </div>
         <InputLabel>Select Bridge Solution</InputLabel>
         <div style={{ display: "flex" }}>
-          
           <Select
             variant="outlined"
             label="Select Bridge"
@@ -180,6 +195,16 @@ const ClaimTransaction = (): React.ReactElement => {
         <Button variant="contained" onClick={claimTxClick}>
           Claim Transaction
         </Button>
+        <Dialog
+          open={emptyFieldCheck}
+          onClose={() => {
+            setEmptyFieldCheck(false);
+          }}
+        >
+          <Alert severity="error">
+            <AlertTitle>Fields cannot be empty</AlertTitle>
+          </Alert>
+        </Dialog>
       </Container>
     </>
   );

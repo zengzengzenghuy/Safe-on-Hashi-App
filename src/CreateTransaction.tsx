@@ -17,6 +17,7 @@ import {
   Typography,
   Switch,
 } from "@material-ui/core";
+import { Alert, AlertTitle, Dialog, DialogContent } from "@mui/material";
 import { Button, SelectChangeEvent } from "@mui/material";
 import HelpIcon from "@mui/icons-material/Help";
 import Tooltip from "@mui/material/Tooltip";
@@ -47,8 +48,6 @@ const Container = styled.div`
   grid-row-gap: 1rem;
 `;
 
-
-
 const SDK = new SafeAppsSDK();
 
 const CreateTransaction = (): React.ReactElement => {
@@ -59,7 +58,7 @@ const CreateTransaction = (): React.ReactElement => {
   const [hashiModuleAddr, setHashiModuleAddr] = useState<string>("");
   const [crossChainSafe, setCrossChainSafe] = useState<string>("");
   const [contractAddr, setcontractAddr] = useState<string>("");
-  const [abi, setAbi] = useState<string>("");
+  const [abi, setAbi] = useState<string | undefined>("");
   const [selectedFunction, setSelectedFunction] = useState<string>("");
   const [param, setParam] = useState<string>();
   const [isInput, setIsInput] = useState<boolean>(false);
@@ -69,7 +68,7 @@ const CreateTransaction = (): React.ReactElement => {
   const [bridge, setBridge] = useState<string>("");
   const [isDetailOpen, setIsDetailOpen] = useState<boolean>(false);
   const [message, setMessage] = useState<Object>();
-
+  const [emptyFieldCheck, setEmptyFieldCheck] = useState<boolean>(false);
   const [copyToClipboard, setCopyToClipboard] = useState<boolean>(false);
 
   useEffect(() => {
@@ -109,17 +108,38 @@ const CreateTransaction = (): React.ReactElement => {
   };
 
   const handleClick = () => {
-    console.log("ABI: ", abi);
-    console.log("type ", typeof abi);
-    const method: ContractInterface = interfaceRepo.getMethods(abi);
-    setContract(method);
-    console.log("method ", method.methods);
+    if (abi === undefined) {
+      setEmptyFieldCheck(true);
+    } else {
+      const method: ContractInterface = interfaceRepo.getMethods(abi);
+      setContract(method);
+      console.log("method ", method.methods);
+    }
   };
 
   const createTxClick = async () => {
+    if (
+      abi == "" ||
+      crossChainSafe == "" ||
+      hashiModuleAddr == "" ||
+      bridge == "" ||
+      contractAddr == "" ||
+      crossChainId == ""
+    ) {
+      setEmptyFieldCheck(true);
+      return;
+    }
+    console.log("here");
+    console.log("abi", typeof abi);
+    console.log("crosschianSafe", typeof crossChainSafe);
+    console.log("hashiModule", typeof hashiModuleAddr);
+    console.log("bridge", typeof bridge);
+    console.log("contract", typeof contractAddr);
+    console.log("crosschainId", typeof crossChainId);
     setIsDetailOpen(true);
+
     const params: string[] | undefined = param?.split(",");
-    const iface = new ethers.utils.Interface(abi);
+    const iface = new ethers.utils.Interface(abi!);
     const toAddr = contractAddr;
     const func = selectedFunction;
     console.log(typeof params);
@@ -154,7 +174,7 @@ const CreateTransaction = (): React.ReactElement => {
   const confirmTx = async () => {
     console.log("Param split", param?.split(","));
     const params: string[] | undefined = param?.split(",");
-    const iface = new ethers.utils.Interface(abi);
+    const iface = new ethers.utils.Interface(abi!);
     const toAddr = contractAddr;
     const func = selectedFunction;
     console.log(typeof params);
@@ -387,6 +407,17 @@ const CreateTransaction = (): React.ReactElement => {
       <Button variant="contained" onClick={createTxClick}>
         Create Transaction
       </Button>
+
+      <Dialog
+        open={emptyFieldCheck}
+        onClose={() => {
+          setEmptyFieldCheck(false);
+        }}
+      >
+        <Alert severity="error">
+          <AlertTitle>Fields cannot be empty</AlertTitle>
+        </Alert>
+      </Dialog>
       <Modal
         open={isDetailOpen}
         onClose={() => {
@@ -405,11 +436,7 @@ const CreateTransaction = (): React.ReactElement => {
               text={JSON.stringify(message)}
               onCopy={() => setCopyToClipboard(true)}
             >
-              <Button
-                variant="contained"
-                color="primary"
-                
-              >
+              <Button variant="contained" color="primary">
                 Click to Copy Message
               </Button>
             </CopyToClipboard>
