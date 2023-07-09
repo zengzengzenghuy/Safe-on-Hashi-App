@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useState } from "react";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -7,12 +6,9 @@ import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import CreateTransaction from "./CreateTransaction";
-import { Create } from "@mui/icons-material";
 import ClaimTransaction from "./ClaimTransaction";
-import { ethers } from "ethers";
-import HashiModuleABI from "./contract/abi/HashiModule.json";
-import { Dialog } from "@mui/material";
 import Prerequisite from "./Prerequisite";
+
 const steps = ["Prerequisite", "Create Transaction", "Claim Transaction"];
 
 export default function CreateTx() {
@@ -28,30 +24,6 @@ export default function CreateTx() {
 
   const handleReset = () => {
     setActiveStep(0);
-  };
-
-  const [binaryData, setBinaryData] = useState<ArrayBuffer>();
-  const [isHashiModuleOpen, setIsHashiModuleOpen] = useState<boolean>(false);
-  const fetchData = async () => {
-    try {
-      const response = await fetch("/src/contract/HashiModuleBytecode.bin");
-      const data = await response.arrayBuffer();
-      setBinaryData(data);
-      console.log(data);
-    } catch (error) {
-      console.error("Error fetching binary file:", error);
-    }
-  };
-  const handleDeployHashiModule = async () => {
-    setIsHashiModuleOpen(true);
-    fetchData();
-    const bytecode = new Uint8Array(binaryData!);
-    const hashiModuleFactory = new ethers.ContractFactory(
-      HashiModuleABI,
-      bytecode
-    );
-    console.log(hashiModuleFactory);
-    hashiModuleFactory.deploy([]);
   };
 
   return (

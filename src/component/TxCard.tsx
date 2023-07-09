@@ -1,21 +1,13 @@
 import { useState, useEffect } from "react";
 import {
-  Card,
-  CardActions,
-  CardContent,
   Typography,
-  List,
   ListItem,
   ListItemButton,
   ListItemText,
   Modal,
   Box,
-  Button,
 } from "@mui/material";
-import {
-  SafeMultisigTransactionResponse,
-  SafeTransactionData,
-} from "@safe-global/safe-core-sdk-types";
+import { SafeMultisigTransactionResponse } from "@safe-global/safe-core-sdk-types";
 import { getExplorerURL } from "../utils/helper";
 import deployedContract from "../utils/contract.json";
 const TxCard = (props: {

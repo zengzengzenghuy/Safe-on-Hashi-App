@@ -1,27 +1,14 @@
 import { useEffect, useState } from "react";
-import { FormControl, Menu, Typography } from "@material-ui/core";
-import {
-  Box,
-  Button,
-  SelectChangeEvent,
-  List,
-  TextField,
-  MenuItem,
-  Select,
-  InputLabel,
-} from "@mui/material";
+import { FormControl } from "@material-ui/core";
+import { Box, List, MenuItem, Select, InputLabel } from "@mui/material";
 import { ethers } from "ethers";
 import { EthersAdapter } from "@safe-global/protocol-kit";
 import SafeAppsSDK, { SafeInfo } from "@gnosis.pm/safe-apps-sdk";
 import { SafeMultisigTransactionListResponse } from "@safe-global/api-kit";
-import {
-  SafeMultisigTransactionResponse,
-  SafeTransactionData,
-} from "@safe-global/safe-core-sdk-types";
+import { SafeMultisigTransactionResponse } from "@safe-global/safe-core-sdk-types";
 import SafeApiKit from "@safe-global/api-kit";
 import { getTxServiceURL } from "./utils/helper";
 import TxCard from "./component/TxCard";
-import { TextFieldsOutlined } from "@mui/icons-material";
 
 const SDK = new SafeAppsSDK();
 
@@ -30,9 +17,9 @@ const History = () => {
 
   const [sourceChain, setSourceChain] = useState<any>("");
   const [chain, setChain] = useState<any>();
-  const [txHash, setTxHash] = useState<any>();
+
   const [txList, setTxList] = useState<SafeMultisigTransactionListResponse>();
-  const [status, setStatus] = useState<string>();
+
   async function loadSafeInfo() {
     const safuInfo = await SDK.safe.getInfo();
     const chainInfo = await SDK.safe.getChainInfo();
@@ -57,20 +44,12 @@ const History = () => {
     const multisigTxs: SafeMultisigTransactionListResponse =
       await safeService.getMultisigTransactions(safuInfo.safeAddress);
 
-    console.log(multisigTxs);
-    console.log("typeof ", typeof multisigTxs.results);
     setTxList(multisigTxs);
-    console.log("TxList ", txList);
   }
 
   useEffect(() => {
     loadSafeInfo();
   }, []);
-
-  const handleClick = async () => {
-    console.log(txList);
-    console.log(typeof txList);
-  };
 
   return (
     <>

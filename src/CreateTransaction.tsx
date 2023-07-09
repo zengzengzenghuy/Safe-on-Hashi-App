@@ -1,36 +1,26 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Spinner, Heading, SegmentedControl } from "evergreen-ui";
+import { Spinner } from "evergreen-ui";
 import SafeAppsSDK, { SafeInfo } from "@gnosis.pm/safe-apps-sdk";
-import { AppTabs } from "./types";
-import Main from "./tabs/Main";
-import RpcCalls from "./tabs/RpcCalls";
+
 import {
   Modal,
   MenuItem,
   TextField,
-  Menu,
   Select,
-  FormControlLabel,
   InputLabel,
   Box,
   Typography,
-  Switch,
 } from "@material-ui/core";
-import { Alert, AlertTitle, Dialog, DialogContent } from "@mui/material";
-import { Button, SelectChangeEvent } from "@mui/material";
+import { Alert, AlertTitle, Dialog } from "@mui/material";
+import { Button } from "@mui/material";
 import HelpIcon from "@mui/icons-material/Help";
 import Tooltip from "@mui/material/Tooltip";
-import {
-  AddressInput,
-  Divider,
-  Text,
-  Title,
-} from "@gnosis.pm/safe-react-components";
-import { ContractInterface, ContractMethod } from "./typing/models";
-import FormGroup from "@material-ui/core";
-import InterfaceRepository, { InterfaceRepo } from "./libs/interfaceRepository";
-import { Signer, ethers } from "ethers";
+
+import { ContractInterface } from "./typing/models";
+
+import InterfaceRepository from "./libs/interfaceRepository";
+import { ethers } from "ethers";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import YahoABI from "./contract/abi/Yaho.json";
 import HashiABI from "./contract/abi/HashiModule.json";
@@ -83,7 +73,6 @@ const CreateTransaction = (): React.ReactElement => {
   }, []);
 
   useEffect(() => {
-    console.log("Use effect triggered");
     contract?.methods.map((option, index) => {
       if (option.name == selectedFunction) {
         setFunctionIndex(index);
@@ -91,11 +80,9 @@ const CreateTransaction = (): React.ReactElement => {
       }
       setParam("");
     });
-    console.log("Selected function", selectedFunction);
   }, [selectedFunction]);
 
   useEffect(() => {}, [bridge]);
-
 
   const handleClick = () => {
     if (abi === undefined) {
@@ -103,7 +90,6 @@ const CreateTransaction = (): React.ReactElement => {
     } else {
       const method: ContractInterface = interfaceRepo.getMethods(abi);
       setContract(method);
-      console.log("method ", method.methods);
     }
   };
 
@@ -119,30 +105,20 @@ const CreateTransaction = (): React.ReactElement => {
       setEmptyFieldCheck(true);
       return;
     }
-    console.log("here");
-    console.log("abi", typeof abi);
-    console.log("crosschianSafe", typeof crossChainSafe);
-    console.log("hashiModule", typeof hashiModuleAddr);
-    console.log("bridge", typeof bridge);
-    console.log("contract", typeof contractAddr);
-    console.log("crosschainId", typeof crossChainId);
+
     setIsDetailOpen(true);
 
     const params: string[] | undefined = param?.split(",");
     const iface = new ethers.utils.Interface(abi!);
     const toAddr = contractAddr;
     const func = selectedFunction;
-    console.log(typeof params);
+
     let calldata;
     if (params?.length == 1 && params[0] == "") {
-      console.log("null");
-
       calldata = iface.encodeFunctionData(func);
     } else {
       calldata = iface.encodeFunctionData(func, params);
     }
-
-    console.log("calldata: ", calldata);
 
     const hashiModuleiFace = new ethers.utils.Interface(HashiABI);
     const txData = hashiModuleiFace.encodeFunctionData("executeTransaction", [
@@ -158,11 +134,8 @@ const CreateTransaction = (): React.ReactElement => {
       data: txData,
     };
     setMessage(message);
-    console.log("Message:", message);
-    console.log("JSON STRING: ", JSON.stringify(message));
   };
   const confirmTx = async () => {
-    console.log("Param split", param?.split(","));
     const params: string[] | undefined = param?.split(",");
     const iface = new ethers.utils.Interface(abi!);
     const toAddr = contractAddr;
@@ -170,14 +143,10 @@ const CreateTransaction = (): React.ReactElement => {
     console.log(typeof params);
     let calldata;
     if (params?.length == 1 && params[0] == "") {
-      console.log("null");
-
       calldata = iface.encodeFunctionData(func);
     } else {
       calldata = iface.encodeFunctionData(func, params);
     }
-
-    console.log("calldata: ", calldata);
 
     const hashiModuleiFace = new ethers.utils.Interface(HashiABI);
     const txData = hashiModuleiFace.encodeFunctionData("executeTransaction", [
@@ -195,22 +164,13 @@ const CreateTransaction = (): React.ReactElement => {
     setMessage(message);
 
     const Yaho = new ethers.utils.Interface(YahoABI);
+
     // only testing with AMB at the moment
-    console.log(
-      typeof deployedContract.GoerAMBMessageRelay +
-        deployedContract.GoerAMBMessageRelay
-    );
-    console.log(
-      typeof deployedContract.GCAMBAdapter + deployedContract.GCAMBAdapter
-    );
-    console.log(typeof message + message);
     const SafeTxData = Yaho.encodeFunctionData("dispatchMessagesToAdapters", [
       [message],
       [deployedContract.GoerAMBMessageRelay],
       [deployedContract.GCAMBAdapter],
     ]);
-
-    console.log("Create tx");
 
     const safeTxHash = await SDK.txs.send({
       txs: [

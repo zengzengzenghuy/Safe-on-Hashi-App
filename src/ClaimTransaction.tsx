@@ -1,37 +1,20 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Spinner, Heading, SegmentedControl } from "evergreen-ui";
+import { Spinner } from "evergreen-ui";
 import SafeAppsSDK, { SafeInfo } from "@gnosis.pm/safe-apps-sdk";
 
 import {
   MenuItem,
   TextField,
-  Menu,
   Select,
-  FormControlLabel,
   InputLabel,
-  Box,
   Typography,
-  Switch,
 } from "@material-ui/core";
-import {
-  Button,
-  SelectChangeEvent,
-  Modal,
-  Alert,
-  AlertTitle,
-  Dialog,
-} from "@mui/material";
+import { Button, Alert, AlertTitle, Dialog } from "@mui/material";
 import HelpIcon from "@mui/icons-material/Help";
 import Tooltip from "@mui/material/Tooltip";
-import {
-  AddressInput,
-  Divider,
-  Text,
-  Title,
-} from "@gnosis.pm/safe-react-components";
 
-import { Signer, ethers } from "ethers";
+import { ethers } from "ethers";
 
 import YaruABI from "./contract/abi/Yaru.json";
 
@@ -92,7 +75,6 @@ const ClaimTransaction = (): React.ReactElement => {
       [sourceSafe],
       [deployedContract.GCAMBAdapter],
     ]);
-    console.log("Claim transaction");
 
     const safeTxHash = await SDK.txs.send({
       txs: [
@@ -104,17 +86,7 @@ const ClaimTransaction = (): React.ReactElement => {
       ],
     });
   };
-  const Boxstyle = {
-    position: "absolute" as "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
-  };
+
   if (!safeInfo) {
     return <Spinner size={24} />;
   }
@@ -187,7 +159,7 @@ const ClaimTransaction = (): React.ReactElement => {
               setMessageId(event.target.value);
             }}
           />
-          <Tooltip title="MessageID emitted from MessageDispatched event">
+          <Tooltip title="MessageID emitted from MessageDispatched event, (hex)">
             <HelpIcon />
           </Tooltip>
         </div>
