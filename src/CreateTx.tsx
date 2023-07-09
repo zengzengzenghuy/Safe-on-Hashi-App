@@ -15,7 +15,6 @@ import { Dialog } from "@mui/material";
 import Prerequisite from "./Prerequisite";
 const steps = ["Prerequisite", "Create Transaction", "Claim Transaction"];
 
-
 export default function CreateTx() {
   const [activeStep, setActiveStep] = React.useState(0);
 
@@ -45,14 +44,15 @@ export default function CreateTx() {
   };
   const handleDeployHashiModule = async () => {
     setIsHashiModuleOpen(true);
-    fetchData()
-    const bytecode = new Uint8Array(binaryData!)
-    const hashiModuleFactory = new ethers.ContractFactory(HashiModuleABI,bytecode)
-    console.log(hashiModuleFactory)
-    hashiModuleFactory.deploy([])
+    fetchData();
+    const bytecode = new Uint8Array(binaryData!);
+    const hashiModuleFactory = new ethers.ContractFactory(
+      HashiModuleABI,
+      bytecode
+    );
+    console.log(hashiModuleFactory);
+    hashiModuleFactory.deploy([]);
   };
-
- 
 
   return (
     <Box sx={{ width: "50%", "margin-left": "70px", "margin-top": "20px" }}>
@@ -83,10 +83,7 @@ export default function CreateTx() {
       ) : (
         <React.Fragment>
           <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
-          {activeStep === 0 && (
-            <Prerequisite/>
-          )}
-
+          {activeStep === 0 && <Prerequisite />}
           {activeStep === 1 && <CreateTransaction />}
           {activeStep === 2 && <ClaimTransaction />}
 

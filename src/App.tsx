@@ -42,7 +42,6 @@ const App = (): React.ReactElement => {
       >
         <Tab label="Create Transaction" />
         <Tab label="History" />
-        <Tab label="Hash Reader" />
         <Tab label="User Guide" />
       </Tabs>
       {currentTabIndex === 0 && (
@@ -55,12 +54,8 @@ const App = (): React.ReactElement => {
           <History />
         </>
       )}
+
       {currentTabIndex === 2 && (
-        <>
-          <HashReader />
-        </>
-      )}
-      {currentTabIndex === 3 && (
         <>
           <UserGuide />
         </>

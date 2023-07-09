@@ -125,8 +125,6 @@ export default function Prerequisite() {
   };
   return (
     <React.Fragment>
-      <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
-
       <h2>Prerequisite</h2>
       <h3>1. Deploy Safe on Destination Chain</h3>
       <p>Switch to Destination Chain and Create new account</p>
