@@ -84,3 +84,11 @@ In order to create 'Claim Transaction', you need following data:
 ### Step 8: Claim Transaction
 
 Once 'Claim Transaction' is clicked, you will create a normal Safe transaction. Sign it, once the threshold is reached, the claim transaction will be executed by Hashi Module.
+
+# How to deploy Hashi Module
+
+TODO
+
+# How to use History section
+
+TODO
