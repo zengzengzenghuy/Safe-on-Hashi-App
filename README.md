@@ -20,10 +20,14 @@ Then:
 
 ## Using the App
 
-[How to initiate from source chain Safe](/doc/README.md#initiate-transactation-on-source-chain)  
-[How to claim from destination chain Safe](/doc/README.md#claim-transaction-on-destination-chain)
-[How to deploy Hashi Module](/doc/README.md#how-to-deploy-hashi-module)
-[How to use History section](/doc/README.md#how-to-use-history-section)
+[How to initiate from source chain Safe](/doc/HowTo.md#initiate-transactation-on-source-chain)  
+[How to claim from destination chain Safe](/doc/HowTo.md#claim-transaction-on-destination-chain)
+[How to deploy Hashi Module](/doc/HowTo.md#how-to-deploy-hashi-module)
+[How to use History section](/doc/HowTo.md#how-to-use-history-section)
+
+## Understanding the logic
+
+[What is the contract calling logic?](/doc/Logic.md#understanding-the-workflow)
 
 ## Feature
 
