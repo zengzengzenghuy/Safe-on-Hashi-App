@@ -2907,6 +2907,11 @@
     "prop-types" "^15.7.2"
     "react-is" "^17.0.2"
 
+"@metamask/detect-provider@^2.0.0":
+  "integrity" "sha512-sFpN+TX13E9fdBDh9lvQeZdJn4qYoRb/6QF2oZZK/Pn559IhCFacPMU1rMuqyXoFQF3JSJfii2l98B87QDPeCQ=="
+  "resolved" "https://registry.npmjs.org/@metamask/detect-provider/-/detect-provider-2.0.0.tgz"
+  "version" "2.0.0"
+
 "@metamask/eth-sig-util@^4.0.0":
   "integrity" "sha512-tghyZKLHZjcdlDqCA3gNZmLeR0XvOE9U1qoQO9ohyAZT6Pya+H9vkBPcsyXytmYLNgVoin7CKCmweo/R43V+tQ=="
   "resolved" "https://registry.npmjs.org/@metamask/eth-sig-util/-/eth-sig-util-4.0.1.tgz"

@@ -5,6 +5,8 @@ import { Tab, Tabs } from "@mui/material";
 import CreateTx from "./CreateTx";
 import History from "./History";
 import UserGuide from "./UserGuide";
+import PullFlow from "./PullFlow";
+import MultiChainAddressBook from "./MultiChainAddressBook";
 
 const App = (): React.ReactElement => {
   const [currentTabIndex, setCurrentTabIndex] = useState(0);
@@ -24,6 +26,8 @@ const App = (): React.ReactElement => {
       >
         <Tab label="Create Transaction" />
         <Tab label="History" />
+        <Tab label="Pull Flow" />
+        <Tab label="MultiChain Address Book"/>
         <Tab label="User Guide" />
       </Tabs>
       {currentTabIndex === 0 && (
@@ -36,8 +40,18 @@ const App = (): React.ReactElement => {
           <History />
         </>
       )}
-
       {currentTabIndex === 2 && (
+        <>
+          <PullFlow />
+        </>
+      )}
+
+      {currentTabIndex === 3 && (
+        <>
+          <MultiChainAddressBook />
+        </>
+      )}
+      {currentTabIndex === 4 && (
         <>
           <UserGuide />
         </>
