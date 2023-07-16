@@ -1,3 +1,17 @@
+
+const getRPC = (chainId: string | undefined) => {
+  switch (chainId) {
+    case "1":
+      return process.env.REACT_APP_ETHEREUM_RPC;
+    case "5":
+      return process.env.REACT_APP_GOERLI_RPC;
+    case "100":
+      return process.env.REACT_APP_GNOSIS_RPC;
+    default:
+      return process.env.REACT_APP_GNOSIS_RPC;
+  }
+};
+
 const getTxServiceURL = (chainId: string) => {
   switch (chainId) {
     case "5":
@@ -30,4 +44,4 @@ const getExplorerURL = (chainId: number | undefined) => {
   }
 };
 
-export { getTxServiceURL, getExplorerURL };
+export { getRPC, getTxServiceURL, getExplorerURL };
