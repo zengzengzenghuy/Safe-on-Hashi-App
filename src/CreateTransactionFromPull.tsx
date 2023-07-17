@@ -152,7 +152,7 @@ const CreateTransactionFromPull = (): React.ReactElement => {
     <Container>
       <Typography variant="h4">Safe details</Typography>
       <Typography variant="h6">
-        From {sourceChain.chainName}: {safeInfo?.safeAddress}
+        From {sourceChain?.chainName}: {safeInfo?.safeAddress}
       </Typography>
 
       <div style={{ display: "flex" }}>

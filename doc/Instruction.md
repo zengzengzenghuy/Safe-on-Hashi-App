@@ -92,3 +92,11 @@ TODO
 # How to use History section
 
 TODO
+
+# How to prove and verify an address
+
+TODO
+
+# How to run off-chain verifier
+
+Check out [server/README.md](../server/README.MD)
