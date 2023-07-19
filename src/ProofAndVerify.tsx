@@ -50,7 +50,7 @@ export default function ProofAndVerify() {
   const [isValidationModalOpen, setIsValidationModalOpen] =
     useState<boolean>(false);
   const [activeStep, setActiveStep] = React.useState(0);
-  const [proof, setProof] = useState<any>();
+  const [proof, setProof] = useState<any>({});
   const [block, setBlock] = useState<any>();
   const [response, setResponse] = useState<any>(null);
   const [isValid, setIsValid] = useState<boolean>(true);
@@ -71,11 +71,10 @@ export default function ProofAndVerify() {
 
   const handleReset = () => {
     setActiveStep(0);
-    setResponse(null)
+    setResponse(null);
   };
 
   async function getProof() {
-
     //TODO: Notice user to switch network to the source chain
     const gno_rpc = getRPC("100");
     // const goerli_rpc = getRPC("5")
@@ -83,12 +82,6 @@ export default function ProofAndVerify() {
     const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
     const gno_provider = new ethers.providers.JsonRpcProvider(gno_rpc);
     // const goerli_provider = new ethers.providers.JsonRpcProvider(goerli_rpc)
-    // const ShoyuBashiAddr = DeployedContract.ShoyuBashi;
-    // const ShoyuBashi = new ethers.Contract(
-    //   ShoyuBashiAddr,
-    //   ShoyuBashiABI,
-    //   gno_provider
-    // );
 
     // await provider?.send("eth_requestAccounts", []);
     // const signer = provider.getSigner();
@@ -108,18 +101,46 @@ export default function ProofAndVerify() {
 
     const blockNumber = (await provider.getBlockNumber()) - 25;
 
+
+    window.ethereum
+    .request({
+      method: "eth_getProof",
+      params: [safeAddr, [hash], ethers.utils.hexlify(blockNumber)],
+    })
+    .then((result: any) => {
+      setProof(result);
+    })
+    .catch((error: any) => {
+      console.log(error);
+    });
     window.ethereum
       .request({
-        method: "eth_getProof",
-        params: [safeAddr, [hash], ethers.utils.hexlify(blockNumber)],
+        method: "eth_getBlockByNumber",
+        params: [ethers.utils.hexlify(blockNumber), false],
       })
       .then((result: any) => {
-        setProof(result);
+        console.log("block number ", ethers.utils.hexlify(blockNumber));
+        console.log("block", result);
+        const stateRoot = {stateRoot:result.stateRoot}
+        setProof((proof: any)=>({
+          ...proof,
+          ...stateRoot
+        }))
       })
       .catch((error: any) => {
         console.log(error);
       });
 
+      
+    console.log("Proof ", proof);
+    // const ShoyuBashiAddr = DeployedContract.ShoyuBashi;
+    // const ShoyuBashi = new ethers.Contract(
+    //   ShoyuBashiAddr,
+    //   ShoyuBashiABI,
+    //   gno_provider
+    // );
+    // const result = await ShoyuBashi.getThresholdHash(5, blockNumber);
+    // console.log("result: ", result);
     // window.ethereum
     //   .request({
     //     method: "eth_getBlockByNumber",
@@ -253,11 +274,8 @@ export default function ProofAndVerify() {
             <Stepper activeStep={activeStep} orientation="vertical">
               {steps.map((step, index) => (
                 <Step key={step.label}>
-                  <StepLabel>
-                   
-                    {step.label}
-                  </StepLabel>
-          
+                  <StepLabel>{step.label}</StepLabel>
+
                   <StepContent>
                     {step.description}
                     <Box sx={{ mb: 2 }}>
