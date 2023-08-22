@@ -31,6 +31,10 @@ For more details on how pull flow works, check out
 ## Running the app
 
 ```
+nvm use
+```
+
+```
 yarn install
 yarn start
 ```
@@ -81,7 +85,7 @@ Then:
 ## Roadmap
 
 1. Auto Deploy Safe on destination chain
-2. Auto claim transaction on destinatin chain
+2. Auto claim transaction on destination chain
 3. Enable multiple bridge solutions
 4. On-chain verification
 

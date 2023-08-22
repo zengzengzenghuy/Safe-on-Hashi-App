@@ -36,7 +36,6 @@ const SDK = new SafeAppsSDK();
 
 const ClaimTransaction = (): React.ReactElement => {
   const [safeInfo, setSafeInfo] = useState<SafeInfo | undefined>();
-  const [sourceChain, setSourceChain] = useState<any>();
   const [sourceSafe, setsourceSafe] = useState<string>("");
 
   const [bridge, setBridge] = useState<string>("");
@@ -50,7 +49,6 @@ const ClaimTransaction = (): React.ReactElement => {
     async function loadSafeInfo() {
       const safuInfo = await SDK.safe.getInfo();
       const chainInfo = await SDK.safe.getChainInfo();
-      setSourceChain(chainInfo);
       console.log({ safuInfo, chainInfo });
       setSafeInfo(safuInfo);
     }
@@ -59,10 +57,10 @@ const ClaimTransaction = (): React.ReactElement => {
 
   const claimTxClick = async () => {
     if (
-      sourceSafe == "" ||
-      bridge == "" ||
-      messageId == "" ||
-      claimMessage == ""
+      sourceSafe === "" ||
+      bridge === "" ||
+      messageId === "" ||
+      claimMessage === ""
     ) {
       setEmptyFieldCheck(true);
       return;
@@ -76,15 +74,15 @@ const ClaimTransaction = (): React.ReactElement => {
       [deployedContract.GCAMBAdapter],
     ]);
 
-    const safeTxHash = await SDK.txs.send({
-      txs: [
-        {
-          to: deployedContract.Yaru,
-          value: "0",
-          data: safeTxData,
-        },
-      ],
-    });
+    // const safeTxHash = await SDK.txs.send({
+    //   txs: [
+    //     {
+    //       to: deployedContract.Yaru,
+    //       value: "0",
+    //       data: safeTxData,
+    //     },
+    //   ],
+    // });
   };
 
   if (!safeInfo) {

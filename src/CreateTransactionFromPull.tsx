@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Spinner } from "evergreen-ui";
 import SafeAppsSDK, { SafeInfo } from "@gnosis.pm/safe-apps-sdk";
 
 import {
-  Modal,
+
   MenuItem,
   TextField,
-  Select,
-  InputLabel,
-  Box,
+
   Typography,
 } from "@material-ui/core";
-import { Alert, AlertTitle, Dialog } from "@mui/material";
+
 import { Button } from "@mui/material";
 import HelpIcon from "@mui/icons-material/Help";
 import Tooltip from "@mui/material/Tooltip";
@@ -21,10 +18,10 @@ import { ContractInterface } from "./typing/models";
 
 import InterfaceRepository from "./libs/interfaceRepository";
 import { ethers } from "ethers";
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import YahoABI from "./contract/abi/Yaho.json";
+
+
 import HashiABI from "./contract/abi/TestHashiModule.json";
-import deployedContract from "./utils/contract.json";
+
 
 const Container = styled.div`
   padding: 24px;
@@ -83,9 +80,9 @@ const CreateTransactionFromPull = (): React.ReactElement => {
 
   useEffect(() => {
     contract?.methods.map((option, index) => {
-      if (option.name == selectedFunction) {
+      if (option.name === selectedFunction) {
         setFunctionIndex(index);
-        setIsInput(Object.keys(option.inputs).length != 0 ? true : false);
+        setIsInput(Object.keys(option.inputs).length !== 0 ? true : false);
       }
       setParam("");
     });
@@ -103,7 +100,7 @@ const CreateTransactionFromPull = (): React.ReactElement => {
   };
 
   const createTxClick = async () => {
-    if (abi == "" || hashiModuleAddr == "" || contractAddr == "") {
+    if (abi === "" || hashiModuleAddr === "" || contractAddr === "") {
       setEmptyFieldCheck(true);
       return;
     }
@@ -114,7 +111,7 @@ const CreateTransactionFromPull = (): React.ReactElement => {
     const func = selectedFunction;
 
     let calldata;
-    if (params?.length == 1 && params[0] == "") {
+    if (params?.length === 1 && params[0] === "") {
       calldata = iface.encodeFunctionData(func);
     } else {
       calldata = iface.encodeFunctionData(func, params);
@@ -137,7 +134,7 @@ const CreateTransactionFromPull = (): React.ReactElement => {
     try {
 
       // TODO switch Metamask to the correct network
-      const tx = await provider.send("eth_sendTransaction", parameter);
+      // const tx = await provider.send("eth_sendTransaction", parameter);
 
     } catch (err) {
       console.log("err:", err);

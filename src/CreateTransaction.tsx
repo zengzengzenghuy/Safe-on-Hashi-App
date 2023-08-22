@@ -54,7 +54,7 @@ const CreateTransaction = (): React.ReactElement => {
   const [isInput, setIsInput] = useState<boolean>(false);
   const interfaceRepo = new InterfaceRepository();
   const [contract, setContract] = useState<ContractInterface | null>(null);
-  const [functionIndex, setFunctionIndex] = useState<any>();
+  // const [functionIndex, setFunctionIndex] = useState<any>();
   const [bridge, setBridge] = useState<string>("");
   const [isDetailOpen, setIsDetailOpen] = useState<boolean>(false);
   const [message, setMessage] = useState<Object>();
@@ -74,9 +74,9 @@ const CreateTransaction = (): React.ReactElement => {
 
   useEffect(() => {
     contract?.methods.map((option, index) => {
-      if (option.name == selectedFunction) {
-        setFunctionIndex(index);
-        setIsInput(Object.keys(option.inputs).length != 0 ? true : false);
+      if (option.name === selectedFunction) {
+        // setFunctionIndex(index);
+        setIsInput(Object.keys(option.inputs).length !== 0 ? true : false);
       }
       setParam("");
     });
@@ -95,12 +95,12 @@ const CreateTransaction = (): React.ReactElement => {
 
   const createTxClick = async () => {
     if (
-      abi == "" ||
-      crossChainSafe == "" ||
-      hashiModuleAddr == "" ||
-      bridge == "" ||
-      contractAddr == "" ||
-      crossChainId == ""
+      abi === "" ||
+      crossChainSafe === "" ||
+      hashiModuleAddr === "" ||
+      bridge === "" ||
+      contractAddr === "" ||
+      crossChainId === ""
     ) {
       setEmptyFieldCheck(true);
       return;
