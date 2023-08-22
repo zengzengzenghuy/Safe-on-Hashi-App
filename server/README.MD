@@ -6,6 +6,8 @@ This is the backend server for verifying proof from [`eth_getProof`](https://doc
 
 ### Setup
 
+`nvm use`
+
 `npm i`
 
 ### Run
