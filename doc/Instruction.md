@@ -87,7 +87,35 @@ Once 'Claim Transaction' is clicked, you will create a normal Safe transaction. 
 
 # How to deploy Hashi Module
 
-TODO
+There are two ways to deploy a hashi module for Safe: CLI and Safe on Hashi App + Zodiac App.
+Hashi Module should be deployed for the destination Safe/secondary Safe/counterfactual Safe.
+
+### CLI
+
+Using CLI provides more flexibility for deploying your Hashi Module as you can configure the constructor for your Hashi Module.
+Refer to https://github.com/zengzengzenghuy/SafeOnHashi#deploy-hashi-module-for-safe
+Once hashi module is deployed, Safe owners have to sign the `enableModule` transaction in the transaction queue and execute it once the threshold is reached.
+
+### Safe on Hashi App + Zodiac App
+
+Using the app provides more user friendly approach to deploy and enable hashi module.
+
+### Deploy Hashi Module
+
+In Prerequisite, Select **Click to Deploy** in Step 2: Deploy Hashi Module for Safe on Destination Chain  
+![](../public/doc/DeployHashiModule.png).  
+`owner`: Owner of the Hashi Module, usually is the owner address in destination Safe.  
+`Source Chain Safe`: Safe address on source chain.  
+`Source Chain`: Source chain where main Safe resides, please choose Goerli if you want to test the app.  
+Click **Confirm deploy**, and confirm the transaction on your wallet. Once the transaction is executed, get your address on newly created contract on block explorer. It will show up in the `To:` section in the transaction details, i.e. https://gnosisscan.io/tx/0xb8fdfb761fd1be5d74ae2266111b2ad455b9143e34ed97ca34a2c79c75bbb55f.
+
+### Enable Hashi Module
+
+Navigate to Zodiac App: Apps-> Search "Zodiac" -> Select "Custom Module"  
+In **Module address**, enter your newly created Hashi Module address from the step above.  
+Click **Add MOdule** and execute the Safe transaction.
+
+Reference: https://zodiac.wiki/index.php/Category:Custom_Module
 
 # How to use History section
 
